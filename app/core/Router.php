@@ -17,8 +17,11 @@ class Router {
         $controllerName = ucfirst($urlParts[0]) . 'Controller';
 
         // Acción por defecto si no se proporciona
+        // Si no se proporciona un método, se usa 'index' por defecto
         $method = $urlParts[1] ?? 'index';
 
+
+        // Si no se proporciona un parámetro, se establece como null
         $param = $urlParts[2] ?? null;
 
         // Incluir el archivo del controlador

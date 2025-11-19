@@ -16,7 +16,7 @@ class UsuarioController extends Controller {
             $usuarioModel = new Usuario();
 
             ## Almacena en la variable Usuarios el metodo getAllUsers() del modelo Usuario
-            $usuarios = $usuarioModel->getAllUsers();
+            $usuarios = $usuarioModel->all();
 
             ## Carga la vista index.php y le pasa la variable usuarios
             $this->view('usuario/index', ['usuarios' => $usuarios], 'Usuario Listado');
@@ -45,7 +45,7 @@ class UsuarioController extends Controller {
         }
 
         $usuarioModel = new Usuario();
-        $usuarioModel->createUser($nombre, $email);
+        $usuarioModel->create($nombre, $email);
 
         Session::flash('success', 'Usuario creado correctamente');
         header("Location: /usuario/index");
@@ -65,7 +65,7 @@ class UsuarioController extends Controller {
 
     public function edit($id) {
         $usuarioModel = new Usuario();
-        $usuario = $usuarioModel->getById($id);
+        $usuario = $usuarioModel->find($id);
 
         if (!$usuario) {
             die("Usuario no encontrado.");

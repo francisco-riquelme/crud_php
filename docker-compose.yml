@@ -1,7 +1,4 @@
-version: "3.9"
-
 services:
-
   php:
     build:
       context: .
@@ -11,6 +8,8 @@ services:
       - .:/var/www/html
     networks:
       - mvc-net
+    depends_on:
+      - mysql
 
   nginx:
     image: nginx:latest
@@ -20,10 +19,31 @@ services:
     volumes:
       - .:/var/www/html
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - mvc-net
     depends_on:
       - php
+
+  mysql:
+    image: mysql:latest
+    container_name: crud_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: crud_app
+      MYSQL_USER: fran
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql # Archivo de inicialización SQL 
     networks:
       - mvc-net
 
 networks:
   mvc-net:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local

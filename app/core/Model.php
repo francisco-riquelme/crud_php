@@ -7,14 +7,20 @@ require_once __DIR__ . '/../../config/database.php';
 class Model {
 
     ## Se define la propiedad protegida $db para la conexion a la base de datos
-    protected $db;
+    protected PDO $db;
 
 
     ## Constructor para inicializar la conexión a la base de datos
     public function __construct() {
 
-        ## Se establece la conexión a la base de datos utilizando la clase Database
-        ## (::) es el operador de resolución de ámbito para acceder a métodos estáticos
-        $this->db = Database::getConnection();
+       ## Inicializa la conexión a la base de datos utilizando la clase Database
+        $this->db = ( new Database() )->connect(); // Llama al método connect() de la clase Database
+
+    }
+
+    protected function query(string $sql, array $params = []): PDOStatement {
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt;
     }
 }

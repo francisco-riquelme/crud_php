@@ -8,15 +8,14 @@ class Database {
 
 
     ## Método estático para obtener la conexión a la base de datos se accede con :: (operador de resolución de ámbito)
-    public static function getConnection() {
+    public static function connect() {
 
         ## Verifica si la instancia ya ha sido creada (conexión singleton)
         if (self::$instance === null) {
-            $host = 'host.docker.internal';
-            $dbname = 'crud_php';
-            $user = 'root';
+            $host = 'mysql'; // nombre del servicio de la base de datos en docker-compose
+            $dbname = 'crud_app';
+            $user = 'fran';
             $password = '1234';
-
 
             ## Intenta establecer la conexión a la base de datos
             try {

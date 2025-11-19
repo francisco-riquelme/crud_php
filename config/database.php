@@ -12,7 +12,7 @@ class Database {
 
         ## Verifica si la instancia ya ha sido creada (conexión singleton)
         if (self::$instance === null) {
-            $host = 'localhost';
+            $host = 'host.docker.internal';
             $dbname = 'crud_php';
             $user = 'root';
             $password = '1234';

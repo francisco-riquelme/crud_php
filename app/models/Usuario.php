@@ -62,4 +62,26 @@ class Usuario extends Model {
             die("Error al eliminar el usuario: " . $e->getMessage());
         }
     }
+
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE id = :id");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    public function update($id, $nombre, $email) {
+        $stmt = $this->db->prepare("
+            UPDATE {$this->table}
+            SET nombre = :nombre, email = :email
+            WHERE id = :id
+        ");
+
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':email', $email);
+
+        return $stmt->execute();
+    }
+
 }

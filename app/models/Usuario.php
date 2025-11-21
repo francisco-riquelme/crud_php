@@ -22,15 +22,16 @@ class Usuario extends Model {
 
 
     ## Método para crear un nuevo usuario pasandole el nombre y email como parámetros
-    public function create(string $nombre, string $email): bool {
+    public function create(string $nombre, string $email, string $password): bool {
         try {
             
-            ## Prepara la consulta SQL para insertar un nuevo usuario
-            $sql = "INSERT INTO {$this->table} (nombre, email) VALUES (?, ?)";
-            return $this->query($sql, [$nombre, $email])->rowCount() > 0;
-            
+            // Hashea la contraseña antes de almacenarla con password_hash ( algoritmo por defecto de PHP )
+            // PASSWORD_DEFAULT utiliza el algoritmo bcrypt actualmente
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $sql = "INSERT INTO {$this->table} (nombre, email, password_hash) VALUES (?, ?, ?)";
+            return $this->query($sql, [$nombre, $email, $hash])->rowCount() > 0;
         } catch (PDOException $e) {
-            die("Error al crear el usuario: " . $e->getMessage());
+            die("Error al crear el usuario con contraseña: " . $e->getMessage());
         }
     }
 
@@ -64,6 +65,19 @@ class Usuario extends Model {
             return $this->query($sql, [$nombre, $email, $id])->rowCount() > 0;
         } catch (PDOException $e) {
             die("Error al actualizar el usuario: " . $e->getMessage());
+        }
+    }
+
+    
+    ## Método para obtener un usuario por su email
+    public function getByEmail(string $email): ?array {
+        try {
+            $sql = "SELECT * FROM {$this->table} WHERE email = ?";
+            $stmt = $this->query($sql, [$email]);
+            $user = $stmt->fetch();
+            return $user ? $user : null;
+        } catch (PDOException $e) {
+            die("Error al obtener el usuario por email: " . $e->getMessage());
         }
     }
 

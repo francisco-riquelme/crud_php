@@ -13,28 +13,35 @@
 
 <body class="bg-light">
 
-<div class="container mt-5">
+<div class="container mt-5" style="max-width: 500px;">
 
-    <h1 class="text-primary mb-4">Crear Nuevo Usuario</h1>
+    <h2 class="mb-4 text-primary">Crear Usuario</h2>
 
-    <form action="/usuario/store" method="POST" class="card p-4 shadow-sm">
-
+    <form action="/usuario/store" method="POST">
+        <input type="hidden" name="csrf_token" value="<?= e(Csrf::generateToken()) ?>">
         <div class="mb-3">
-            <label class="form-label">Nombre:</label>
+            <label class="form-label">Nombre</label>
             <input type="text" name="nombre" class="form-control" required>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Email:</label>
+            <label class="form-label">Correo</label>
             <input type="email" name="email" class="form-control" required>
         </div>
 
-        <button class="btn btn-success">Guardar</button>
-        <a href="/usuario/index" class="btn btn-secondary">Volver</a>
+        <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        
+
+
+        <button class="btn btn-success w-100">Crear Usuario</button>
 
     </form>
 
 </div>
+
 
 </body>
 </html>

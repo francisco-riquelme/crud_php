@@ -4,6 +4,8 @@
 
 class Router {
 
+
+
     public function run() {
 
         // Obtener la URL solicitada y la analiza para determinar el controlador y la acción
@@ -31,7 +33,7 @@ class Router {
         // Verificar si el archivo del controlador existe
         if (!file_exists($controllerFile)) {
             http_response_code(404);
-            echo "Controller not found.";
+            require_once __DIR__ . '/../views/errors/404.php';
             exit;
         }
 
@@ -42,27 +44,32 @@ class Router {
         // Validacion de errores de clase y metodo
         if (!class_exists($controllerName)) {
             http_response_code(404);
-            echo "Controller class not found.";
+            require_once __DIR__ . '/../views/errors/404.php';
             exit;
         }
 
         // Crear una instancia del controlador
         $controller = new $controllerName();
 
+
         // Verificar si el método existe en el controlador
         if (!method_exists($controller, $method)) {
             http_response_code(404);
-            echo "Action not found.";
-            exit;
-        }
+            require_once __DIR__ . '/../views/errors/404.php';
+            exit;}
 
 
-        // Llamar al método del controlador
-        if ($param !== null) {
-            $controller->$method($param);
-        } else {
-            $controller->$method();
+        // Obtener parámetros dinámicos (todos los que vengan después del método)
+        $params = array_slice($urlParts, 2);
+
+
+        // Evitar continuar si ya hubo una redirección
+        if (headers_sent()) {
+            return;
         }
+        // Ejecutar el método con los parámetros necesarios
+        return call_user_func_array([$controller, $method], $params);
+
     
     }
 }
